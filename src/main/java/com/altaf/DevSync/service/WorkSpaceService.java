@@ -24,19 +24,48 @@ public class WorkSpaceService {
         WorkSpace workSpace = new WorkSpace();
         workSpace.setName(request.getName());
         workSpace.setDescription(request.getDescription());
-        workSpace.setOwnerName(user.getFullName());
-        workSpace.setOwnerEmail(user.getEmail());
-        workSpace.setOwnerId(user.getId());
+        workSpace.setOwner(user);
         WorkSpace saved = workSpaceRepository.save(workSpace);
 
         WorkSpaceResponse response = new WorkSpaceResponse();
         response.setId(saved.getId());
-        response.setOwnerId(saved.getOwnerId());
         response.setName(saved.getName());
         response.setCreatedAt(saved.getCreatedAt());
-        response.setOwnerName(saved.getOwnerName());
-        response.setOwnerEmail(saved.getOwnerEmail());
         response.setDescription(saved.getDescription());
+        response.setOwnerName(user.getFullName());
         return  response;
+    }
+
+    public WorkSpaceResponse getWorkSpaceById(Long id, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("User not found"));
+        WorkSpace workSpace = workSpaceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("WorkSpace not found"));
+
+        if(!workSpace.getOwner().getId().equals(user.getId())){
+            throw new RuntimeException("Access denied");
+        }
+        WorkSpaceResponse response = new WorkSpaceResponse();
+        response.setId(workSpace.getId());
+        response.setName(workSpace.getName());
+        response.setDescription(workSpace.getDescription());
+        response.setCreatedAt(workSpace.getCreatedAt());
+        response.setOwnerName(user.getFullName());
+        return  response;
+    }
+
+    public String deleteWorkSpaceById(Long id, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("User not found"));
+        WorkSpace workSpace = workSpaceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("WorkSpace not found"));
+        if(!workSpace.getOwner().getId().equals(user.getId())){
+            throw new RuntimeException("Access denied");
+        }
+        workSpaceRepository.deleteById(id);
+        return "WorkSpace is deleted successfully";
+
     }
 }

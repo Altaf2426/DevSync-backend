@@ -1,6 +1,6 @@
 package com.altaf.DevSync.Controller;
 
-import com.altaf.DevSync.Model.User;
+
 import com.altaf.DevSync.dto.AuthResponse;
 import com.altaf.DevSync.dto.UserLoginRequest;
 import com.altaf.DevSync.dto.UserResponse;

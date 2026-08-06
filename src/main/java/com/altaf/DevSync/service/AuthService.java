@@ -3,7 +3,6 @@ package com.altaf.DevSync.service;
 import com.altaf.DevSync.Model.Role;
 import com.altaf.DevSync.Model.User;
 import com.altaf.DevSync.Repository.UserRepository;
-import com.altaf.DevSync.Security.CustomUserDetailsService;
 import com.altaf.DevSync.Security.JwtService;
 import com.altaf.DevSync.dto.AuthResponse;
 import com.altaf.DevSync.dto.UserLoginRequest;
