@@ -31,7 +31,7 @@ public class AuthService {
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.EMPLOYEE);
         User savedUser = userRepository.save(user);
         AuthResponse response = new AuthResponse();
 

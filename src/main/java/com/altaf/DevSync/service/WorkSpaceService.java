@@ -1,8 +1,11 @@
 package com.altaf.DevSync.service;
 
+import com.altaf.DevSync.Model.Role;
 import com.altaf.DevSync.Model.User;
 import com.altaf.DevSync.Model.WorkSpace;
+import com.altaf.DevSync.Model.WorkSpaceMember;
 import com.altaf.DevSync.Repository.UserRepository;
+import com.altaf.DevSync.Repository.WorkSpaceMemberRepository;
 import com.altaf.DevSync.Repository.WorkSpaceRepository;
 import com.altaf.DevSync.dto.WorkSpaceRequest;
 import com.altaf.DevSync.dto.WorkSpaceResponse;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WorkSpaceService {
     private final WorkSpaceRepository workSpaceRepository;
+    private final WorkSpaceMemberRepository workSpaceMemberRepository;
     private final UserRepository userRepository;
 
     public WorkSpaceResponse createWorkSpace(Authentication authentication
@@ -26,6 +30,12 @@ public class WorkSpaceService {
         workSpace.setDescription(request.getDescription());
         workSpace.setOwner(user);
         WorkSpace saved = workSpaceRepository.save(workSpace);
+
+        WorkSpaceMember ownerMember = new WorkSpaceMember();
+        ownerMember.setWorkSpace(saved);
+        ownerMember.setUser(user);
+        ownerMember.setRole(Role.OWNER);
+        workSpaceMemberRepository.save(ownerMember);
 
         WorkSpaceResponse response = new WorkSpaceResponse();
         response.setId(saved.getId());
@@ -46,12 +56,14 @@ public class WorkSpaceService {
         if(!workSpace.getOwner().getId().equals(user.getId())){
             throw new RuntimeException("Access denied");
         }
+
         WorkSpaceResponse response = new WorkSpaceResponse();
         response.setId(workSpace.getId());
         response.setName(workSpace.getName());
         response.setDescription(workSpace.getDescription());
         response.setCreatedAt(workSpace.getCreatedAt());
         response.setOwnerName(user.getFullName());
+
         return  response;
     }
 

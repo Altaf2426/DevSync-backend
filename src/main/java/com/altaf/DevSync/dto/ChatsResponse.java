@@ -1,6 +1,5 @@
 package com.altaf.DevSync.dto;
 
-import com.altaf.DevSync.Model.Role;
 import com.altaf.DevSync.Model.User;
 import com.altaf.DevSync.Model.WorkSpace;
 import lombok.Data;
@@ -8,10 +7,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class WorkSpaceMemberResponse {
+public class ChatsResponse {
     private Long id;
-    private String name;
-    private String email;
-    private Role role;
-    private LocalDateTime joinAt;
+    private String content;
+    private User senderId;
+    private WorkSpace workSpaceId;
+    private LocalDateTime createdAt;
 }

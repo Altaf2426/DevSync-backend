@@ -8,18 +8,17 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class WorkSpaceMember {
+public class Chats {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "workspace_id")
-    private WorkSpace workSpace;
+    private String content;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private User sender;
+    @ManyToOne
+    @JoinColumn(name = "workSpace_id")
+    private WorkSpace workSpace;
     @CreationTimestamp
-    private LocalDateTime joinAt;
+    private LocalDateTime createdAt;
 }
