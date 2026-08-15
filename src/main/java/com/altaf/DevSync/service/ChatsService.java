@@ -11,6 +11,7 @@ import com.altaf.DevSync.Repository.WorkSpaceRepository;
 import com.altaf.DevSync.dto.ChatsRequest;
 import com.altaf.DevSync.dto.ChatsResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatsService {
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate;
     private final WorkSpaceRepository workSpaceRepository;
     private final WorkSpaceMemberRepository workSpaceMemberRepository;
     private final ChatsRepository chatsRepository;
@@ -47,6 +49,7 @@ public class ChatsService {
         response.setSenderId(savedChat.getSender());
         response.setWorkSpaceId(savedChat.getWorkSpace());
         response.setCreatedAt(savedChat.getCreatedAt());
+        messagingTemplate.convertAndSend("/topic/chat" + workSpaceId , response);
         return response;
     }
 }
